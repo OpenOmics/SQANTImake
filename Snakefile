@@ -22,8 +22,8 @@ import pandas as pd
 ## Locations of working directories and reference genomes for analysis
 ##
 sample_file= config["samples"]
-rawdata_dir= config["rawdata_dir"]
-working_dir= config["working_dir"]
+rawdata_dir= config["rawdir"]
+working_dir= config["workdir"]
 ref_fa= config["ref_fa"]
 ref_gtf= config["ref_gtf"]
 sqanti= config["sqanti"]
@@ -57,7 +57,7 @@ rule minimap:
     module load minimap2 python
     source /data/$USER/conda/etc/profile.d/conda.sh
     conda activate SQANTI3.env
-    minimap2 -ax splice -t 8 -uf --secondary=no -C5 {params.ref_fa} {input.FQ} > {output.SAM}
+    minimap2 -ax splice -t 8 -uf --secondary=no -C5 {params.genome} {input.FQ} > {output.SAM}
     """
 
 rule sort:
@@ -83,7 +83,7 @@ rule collapse_isoforms:
     GTF=join(working_dir, "SQANTI/{samples}.collapsed.gff"),
   params:
     rname="collapse_isoforms",
-    prefix=join(working_dir,"SQANTI/{samples}")
+    prefix=join(working_dir,"SQANTI/{samples}"),
     dir=directory(join(working_dir, "SQANTI")),
     cupcake=cupcake,
   shell:
@@ -105,14 +105,14 @@ rule SQANTI:
   params:
     rname="SQANTI",
     script_dir=directory(join(working_dir, "scripts")),
-    ref_gtf=ref_gtf
-    ref_fa=ref_fa
+    ref_gtf=ref_gtf,
+    ref_fa=ref_fa,
   shell:
     """
     module load python
     source /data/$USER/conda/etc/profile.d/conda.sh
     conda activate SQANTI3.env
-    python {params.script_dir}/sqanti3_qc.py {input.gtf} {params.ref_gtf} {params.ref_fa}
+    python {params.script_dir}/sqanti3_qc.py {input.GTF} {params.ref_gtf} {params.ref_fa}
     """
 
 #rule mergeGTF:
