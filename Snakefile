@@ -54,9 +54,7 @@ rule minimap:
   shell:
     """
     mkdir -p {params.dir}
-    module load minimap2 python
-    source /data/$USER/conda/etc/profile.d/conda.sh
-    conda activate SQANTI3.env
+    module load minimap2
     minimap2 -ax splice -t 8 -uf --secondary=no -C5 {params.genome} {input.FQ} > {output.SAM}
     """
 
@@ -115,11 +113,17 @@ rule SQANTI:
     python {params.script_dir}/sqanti3_qc.py {input.GTF} {params.ref_gtf} {params.ref_fa}
     """
 
-#rule mergeGTF:
-#  input:
-#  output:
-#  params:
-#    rname="mergeGTF",
-#  shell:
-#    """
-#    """
+rule mergeGTF:
+  input:
+    expand(join(working_dir, "SQANTI/{samples}.collapsed_corrected.gtf.cds.gff"),samples=SAMPLES),
+  output:
+    gtf=join(working_dir,"SQANTI/total"),
+  params:
+    rname="mergeGTF",
+    gffcompare_dir=gffcomp,
+    ref_gtf=ref_gtf,
+    prefix=join(working_dir,"SQANTI/total"),
+  shell:
+    """
+    {params.gffcompare_dir}/gffcompare -r {params.ref_gtf} -o {params.prefix} {input}
+    """
