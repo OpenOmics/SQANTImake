@@ -85,6 +85,7 @@ rule collapse_isoforms:
     mkdir {params.dir}
     source /data/$USER/conda/etc/profile.d/conda.sh
     conda activate SQANTI3.env
+    export PYTHONPATH=$PYTHONPATH:/data/NCBR/projects/NCBR-200/round1/SQANTI3/cDNA_Cupcake/sequence
     collapse_isoforms_by_sam.py --input {input.FQ}  --fq -s {input.SAM} --dun-merge-5-shorter -o {params.prefix} -c 0.9 -i 0.95
     """
 
