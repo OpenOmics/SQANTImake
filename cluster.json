@@ -7,4 +7,10 @@
               "threads": "2",
               "gres": "lscratch:500"
       },
+      "minimap": {
+              "mem": "24g",
+              "time": "24:00:00",
+              "partition": "norm",
+              "threads": "16",
+      },
 }
