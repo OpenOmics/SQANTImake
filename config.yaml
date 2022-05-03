@@ -1,6 +1,9 @@
 ## Directory where results will be stored
-workdir: "WORKDIR"
+workdir: "/data/NCBR/projects/NIAMS-11/SQANTImake"
 ## Directory where rawdata is stored
-rawdir: "RAWDIR"
+rawdir: "/data/NCBR/rawdata/NIAMS-11/"
 ## File containing sample IDs
-samples: "WORKDIR/samples.tsv"
+samples: "/data/NCBR/projects/NIAMS-11/SQANTImake/samples.txt"
+## reference genome info
+ref_fa: "/data/NCBR/references/human/hg38/Homo_sapiens_assembly38.fasta"
+ref_gtf: "/data/NCBR/references/human/hg38/gencode.v33.annotation.gff3"
