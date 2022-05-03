@@ -26,6 +26,11 @@ rawdata_dir= config["rawdata_dir"]
 working_dir= config["working_dir"]
 ref_fa= config["ref_fa"]
 ref_gtf= config["ref_gtf"]
+sqanti= config["sqanti"]
+gffread= config["gffread"]
+gffcomp= config["gffcomp"]
+cupcake= config["cupcake"]
+
 
 df = pd.read_csv(sample_file, header=0, sep='\t')
 SAMPLES=list(set(df['sample'].tolist()))
@@ -80,7 +85,7 @@ rule collapse_isoforms:
     rname="collapse_isoforms",
     prefix=join(working_dir,"SQANTI/{samples}")
     dir=directory(join(working_dir, "SQANTI")),
-    cupcake=join(cupcake_dir,"sequence"),
+    cupcake=cupcake,
   shell:
     """
     module load python
