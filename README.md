@@ -24,5 +24,5 @@ Actual run of the pipeline
 Once everything seems to work, to perform a full run of a step of the pipeline, submit:
 
 ```
-sbatch --partition=norm --gres=lscratch:500 --time=10-00:00:00 --mail-type=BEGIN,END,FAIL pipeline_submit.sh process /data/NHLBIcore/projects/methyl-seek
+sbatch --partition=norm --gres=lscratch:500 --time=10-00:00:00 --mail-type=BEGIN,END,FAIL SQANTI_submit.sh process /data/NCBR/projects/NIAMS-11/SQANTImake
 ```
