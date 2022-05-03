@@ -1,0 +1,6 @@
+## Directory where results will be stored
+workdir: "WORKDIR"
+## Directory where rawdata is stored
+rawdir: "RAWDIR"
+## File containing sample IDs
+samples: "WORKDIR/samples.tsv"
