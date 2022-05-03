@@ -17,7 +17,7 @@ Dry run of the pipeline
 To perform a dry run a step of the pipeline:
 
 ```
-sh SQANTI_submit.sh npr /data/NHLBIcore/projects/methyl-seek
+sh SQANTI_submit.sh npr /data/NCBR/projects/NIAMS-11/SQANTImake
 ```
 
 Actual run of the pipeline
