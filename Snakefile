@@ -145,6 +145,7 @@ rule mergeGTF:
     GTF=expand(join(working_dir, "SQANTI/{samples}.collapsed_classification.filtered_lite.gtf"),samples=SAMPLES),
   output:
     GTF=join(working_dir,"SQANTI/total.combined.gtf"),
+    GTFF=join(working_dir,"SQANTI/total_filter.combined.gtf"),
   params:
     rname="mergeGTF",
     gffcompare_dir=gffcomp,
@@ -156,3 +157,36 @@ rule mergeGTF:
     {params.gffcompare_dir}/gffcompare -r {params.ref_gtf} -o {params.prefix_filter} {input.GTF}
     """
 
+rule AGAT:
+  input:
+    GTF=join(working_dir,"SQANTI/total.combined.gtf"),
+    GTFF=join(working_dir,"SQANTI/total_filter.combined.gtf"),
+  output:
+    GTF=join(working_dir,"SQANTI/total.AGAT.gtf"),
+    GTFF=join(working_dir,"SQANTI/total_filter.AGAT.gtf"),
+  params:
+    rname="AGAT",
+    dir=working_dir,
+  shell:
+    """
+    module load singularity python
+    singularity exec -B {params.dir} agat_0.8.0--pl5262hdfd78af_0.sif agat_convert_sp_gff2gtf.pl --gff {input.GTF} -o {output.GTF}
+    singularity exec -B {params.dir} agat_0.8.0--pl5262hdfd78af_0.sif agat_convert_sp_gff2gtf.pl --gff {input.GTFF} -o {output.GTFF}
+    """
+
+rule cleanUp:
+  input:
+    GTF=join(working_dir,"SQANTI/total.AGAT.gtf"),
+    GTFF=join(working_dir,"SQANTI/total_filter.AGAT.gtf"),
+  output:
+    GTF=join(working_dir,"SQANTI/total.AGAT.clean.gtf"),
+    GTFF=join(working_dir,"SQANTI/total_filter.AGAT.clean.gtf"),
+  params:
+    rname="cleanUp",
+    dir=working_dir,
+  shell:
+    """
+    module load python
+    {params.dir}/clean_gtf.py {input.GTF} > {output.GTF}
+    {params.dir}/clean_gtf.py {input.GTFF} > {output.GTFF}
+    """
