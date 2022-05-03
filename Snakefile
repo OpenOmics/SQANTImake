@@ -38,7 +38,7 @@ SAMPLES=list(set(df['sample'].tolist()))
 rule All:
     input:
       expand(join(working_dir, "pacbio/{samples}.sort.bam"), samples=SAMPLES),
-      expand(join(working_dir, "SQANTI/{samples}.collapsed.gff), samples=SAMPLES),
+      expand(join(working_dir, "SQANTI/{samples}.collapsed.gff"), samples=SAMPLES),
       expand(join(working_dir, "SQANTI/{samples}.collapsed_corrected.gtf.cds.gff"), samples=SAMPLES),
 
 
