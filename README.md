@@ -17,12 +17,12 @@ Dry run of the pipeline
 To perform a dry run a step of the pipeline:
 
 ```
-sh SQANTI_submit.sh npr /data/NCBR/projects/NIAMS-11/SQANTImake
+sh pipeline_submit.sh npr /data/NCBR/projects/NIAMS-11/SQANTImake
 ```
 
 Actual run of the pipeline
 Once everything seems to work, to perform a full run of a step of the pipeline, submit:
 
 ```
-sbatch --partition=norm --gres=lscratch:500 --time=10-00:00:00 --mail-type=BEGIN,END,FAIL SQANTI_submit.sh process /data/NCBR/projects/NIAMS-11/SQANTImake
+sbatch --partition=norm --gres=lscratch:500 --time=10-00:00:00 --mail-type=BEGIN,END,FAIL pipeline_submit.sh process /data/NCBR/projects/NIAMS-11/SQANTImake
 ```
