@@ -40,7 +40,10 @@ rule All:
       expand(join(working_dir, "pacbio/{samples}.sort.bam"), samples=SAMPLES),
       expand(join(working_dir, "SQANTI/{samples}.collapsed.gff"), samples=SAMPLES),
       expand(join(working_dir, "SQANTI/{samples}.collapsed_corrected.gtf.cds.gff"), samples=SAMPLES),
-
+      expand(join(working_dir, "SQANTI/{samples}.collapsed_corrected.fasta"),samples=SAMPLES),
+      expand(join(working_dir, "SQANTI/{samples}.collapsed_classification.filtered_lite.gtf"),samples=SAMPLES),
+      join(working_dir,"SQANTI/total.combined.gtf"),
+      join(working_dir,"SQANTI/total_filter.combined.gtf"),
 
 rule minimap:
   input:
@@ -100,9 +103,11 @@ rule SQANTI:
   output:
     GTF=join(working_dir, "SQANTI/{samples}.collapsed_corrected.gtf"),
     GFF=join(working_dir, "SQANTI/{samples}.collapsed_corrected.gtf.cds.gff"),
+    FA=join(working_dir, "SQANTI/{samples}.collapsed_corrected.fasta"),
+    TXT=join(working_dir, "SQANTI/{samples}.collapsed_classification.txt"),
   params:
     rname="SQANTI",
-    script_dir=directory(join(working_dir, "scripts")),
+    script_dir=directory(join(working_dir, "SQANTI3")),
     ref_gtf=ref_gtf,
     ref_fa=ref_fa,
   shell:
@@ -113,17 +118,41 @@ rule SQANTI:
     python {params.script_dir}/sqanti3_qc.py {input.GTF} {params.ref_gtf} {params.ref_fa}
     """
 
+rule SQANTIfilter:
+  input:
+    SAM=join(working_dir, "pacbio/{samples}.sort.sam"),
+    FA=join(working_dir, "SQANTI/{samples}.collapsed_corrected.fasta"),
+    GFF=join(working_dir, "SQANTI/{samples}.collapsed_corrected.gtf.cds.gff"),
+    TXT=join(working_dir, "SQANTI/{samples}.collapsed_classification.txt"),
+  output:
+    GFF=join(working_dir, "SQANTI/{samples}.collapsed_classification.filtered_lite.gtf"),
+  params:
+    rname="SQANTIfilter",
+    script_dir=directory(join(working_dir, "SQANTI3")),
+    dir=directory(join(working_dir, "SQANTI")),
+  shell:
+    """
+    module load python
+    source /data/$USER/conda/etc/profile.d/conda.sh
+    conda activate SQANTI3.env
+    cd {params.dir}
+    python {params.script_dir}/sqanti3_RulesFilter.py --sam {input.SAM} {input.TXT} {input.FA} {input.GFF}
+    """
+
 rule mergeGTF:
   input:
-    expand(join(working_dir, "SQANTI/{samples}.collapsed_corrected.gtf.cds.gff"),samples=SAMPLES),
+    GFF=expand(join(working_dir, "SQANTI/{samples}.collapsed_corrected.gtf.cds.gff"),samples=SAMPLES),
+    GTF=expand(join(working_dir, "SQANTI/{samples}.collapsed_classification.filtered_lite.gtf"),samples=SAMPLES),
   output:
-    gtf=join(working_dir,"SQANTI/total"),
+    GTF=join(working_dir,"SQANTI/total.combined.gtf"),
   params:
     rname="mergeGTF",
     gffcompare_dir=gffcomp,
     ref_gtf=ref_gtf,
-    prefix=join(working_dir,"SQANTI/total"),
+    prefix_filter=join(working_dir,"SQANTI/total_filter"),
   shell:
     """
-    {params.gffcompare_dir}/gffcompare -r {params.ref_gtf} -o {params.prefix} {input}
+    {params.gffcompare_dir}/gffcompare -r {params.ref_gtf} -o {params.prefix} {input.GFF}
+    {params.gffcompare_dir}/gffcompare -r {params.ref_gtf} -o {params.prefix_filter} {input.GTF}
     """
+
