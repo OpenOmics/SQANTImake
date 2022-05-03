@@ -34,6 +34,7 @@ rule All:
     input:
       expand(join(working_dir, "pacbio/{samples}.sort.bam"), samples=SAMPLES),
       expand(join(working_dir, "SQANTI/{samples}.collapsed.gff), samples=SAMPLES),
+      expand(join(working_dir, "SQANTI/{samples}.collapsed_corrected.gtf.cds.gff"), samples=SAMPLES),
 
 
 rule minimap:
@@ -96,6 +97,7 @@ rule SQANTI:
     GTF=join(working_dir, "SQANTI/{samples}.collapsed_corrected.gtf"),
     GFF=join(working_dir, "SQANTI/{samples}.collapsed_corrected.gtf.cds.gff"),
   params:
+    rname="SQANTI",
     script_dir=directory(join(working_dir, "scripts")),
     ref_gtf=ref_gtf
     ref_fa=ref_fa
@@ -106,3 +108,12 @@ rule SQANTI:
     conda activate SQANTI3.env
     python {params.script_dir}/sqanti3_qc.py {input.gtf} {params.ref_gtf} {params.ref_fa}
     """
+
+#rule mergeGTF:
+#  input:
+#  output:
+#  params:
+#    rname="mergeGTF",
+#  shell:
+#    """
+#    """
