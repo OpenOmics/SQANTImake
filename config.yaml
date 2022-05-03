@@ -7,3 +7,7 @@ samples: "/data/NCBR/projects/NIAMS-11/SQANTImake/samples.txt"
 ## reference genome info
 ref_fa: "/data/NCBR/references/human/hg38/Homo_sapiens_assembly38.fasta"
 ref_gtf: "/data/NCBR/references/human/hg38/gencode.v33.annotation.gff3"
+## Directories of software
+sqanti: "/data/NCBR/projects/NIAMS-11/SQANTImake/SQANTI3/"
+gffread: "/data/NCBR/projects/NIAMS-11/SQANTImake/gffread/"
+gffcomp: "/data/NCBR/projects/NIAMS-11/SQANTImake/gffcompare/"
