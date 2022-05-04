@@ -12,6 +12,8 @@ cd gffcompare
 make release
 cd ../gffread
 make release
+module load singularity
+singularity pull docker://quay.io/biocontainers/agat:0.8.0--pl5262hdfd78af_0
 ```
 Dry run of the pipeline
 To perform a dry run a step of the pipeline:
