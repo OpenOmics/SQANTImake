@@ -17,6 +17,44 @@ echo $R
 mkdir -p $R/snakejobs
 mkdir -p $R/reports
 
+if [ -d "${R}/gffcompare" ] 
+then
+    echo "gffcompare already installed." 
+else
+    echo "Installing gffcompare."
+    git clone https://github.com/gpertea/gffcompare.git
+    cd ${R}/gffcompare
+    make release
+    cd ..
+fi
+
+if [ -d "${R}/gffread" ]
+then
+    echo "gffread already installed."
+else
+    echo "Installing gffread."
+    git clone https://github.com/gpertea/gffread.git
+    cd ${R}/gffread
+    make release
+    cd ..
+fi
+
+if [ -d "${R}/cDNA_Cupcake" ]
+then
+    echo "cDNA_Cupcake already installed."
+else
+    echo "Installing cDNA_Cupcake."
+    git clone https://github.com/Magdoll/cDNA_Cupcake.git
+fi
+
+if [ -d "${R}/SQANTI3" ]
+then
+    echo "SQANTI3 already installed."
+else
+    echo "Installing SQANTI3."
+    git clone https://github.com/ConesaLab/SQANTI3.git
+fi
+
 ##
 ## Test commandline arguments
 ##
